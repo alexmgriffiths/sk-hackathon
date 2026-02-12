@@ -29,7 +29,7 @@ func (h *ConcernsHandler) Analyze(c *gin.Context) {
 
 	result, err := h.service.Analyze(c.Request.Context(), req.Concern)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to analyze concern"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to analyze concern", "error": err.Error()})
 		return
 	}
 
