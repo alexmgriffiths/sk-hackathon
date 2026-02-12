@@ -5,11 +5,15 @@ import (
 	"hackathon/lib/ai"
 	"hackathon/services"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func New() *gin.Engine {
+func New(pool *pgxpool.Pool) *gin.Engine {
 	r := gin.Default()
+
+	r.Use(cors.Default())
 
 	aiClient := ai.NewClient()
 

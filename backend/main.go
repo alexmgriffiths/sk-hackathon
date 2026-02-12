@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
+	"hackathon/lib/db"
 	"hackathon/router"
 
 	"github.com/joho/godotenv"
@@ -19,7 +21,11 @@ func main() {
 		port = "8080"
 	}
 
-	r := router.New()
+	ctx := context.Background()
+	pool := db.Connect(ctx)
+	defer pool.Close()
+
+	r := router.New(pool)
 
 	log.Printf("Server starting on :%s", port)
 	if err := r.Run(":" + port); err != nil {
