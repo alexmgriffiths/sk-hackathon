@@ -8,16 +8,22 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Connect(ctx context.Context) *pgxpool.Pool {
-	pool, err := pgxpool.New(ctx, os.Getenv("DATABASE_URL"))
+func Connect(ctx context.Context) (*pgxpool.Pool, error) {
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		return nil, nil
+	}
+
+	pool, err := pgxpool.New(ctx, dbURL)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v", err)
+		return nil, err
 	}
 
 	if err := pool.Ping(ctx); err != nil {
-		log.Fatalf("Unable to ping database: %v", err)
+		pool.Close()
+		return nil, err
 	}
 
 	log.Println("Connected to database")
-	return pool
+	return pool, nil
 }

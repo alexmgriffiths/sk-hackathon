@@ -22,8 +22,13 @@ func main() {
 	}
 
 	ctx := context.Background()
-	pool := db.Connect(ctx)
-	defer pool.Close()
+	pool, err := db.Connect(ctx)
+	if err != nil {
+		log.Printf("Warning: Database not available: %v", err)
+	}
+	if pool != nil {
+		defer pool.Close()
+	}
 
 	r := router.New(pool)
 
