@@ -1,98 +1,99 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-
-export default function HomeScreen() {
+export default function HomeDashboardScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.heading}>Welcome back, Sarah!</Text>
+            <Text style={styles.subheading}>Front Desk Team • Morning Shift</Text>
+          </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+          <View style={styles.headerRight}>
+            <Text style={styles.todayLabel}>Today</Text>
+            <Text style={styles.dateLabel}>Dec 12, 2024</Text>
+          </View>
+        </View>
+
+        <Pressable
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.ctaButton, pressed && styles.pressed]}
+          onPress={() => router.push('/start-report')}>
+          <View style={styles.ctaLeft}>
+            <View style={styles.ctaIconWrap}>
+              <MaterialCommunityIcons name="plus" size={24} color="#FFFFFF" />
+            </View>
+            <View style={styles.ctaText}>
+              <Text style={styles.ctaTitle}>Start New Guided Report</Text>
+              <Text style={styles.ctaSubtitle}>Share your observations & suggestions</Text>
+            </View>
+          </View>
+          <MaterialCommunityIcons name="arrow-right" size={20} color="#FFFFFF" />
+        </Pressable>
+
+        <View style={styles.placeholderCard}>
+          <Text style={styles.placeholderTitle}>Next sections</Text>
+          <Text style={styles.placeholderBody}>
+            Recent activity, drafts, insights, and learning resources can be added next.
+          </Text>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  safeArea: { flex: 1, backgroundColor: '#E6E6E3' },
+  content: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 24, gap: 12 },
+  pressed: { opacity: 0.86 },
+
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  headerLeft: { gap: 2, flex: 1, paddingRight: 12 },
+  heading: { fontSize: 20, fontWeight: '800', lineHeight: 28, color: '#111827' },
+  subheading: { fontSize: 12, lineHeight: 16, color: '#4B5563' },
+  headerRight: { alignItems: 'flex-end' },
+  todayLabel: { fontSize: 12, lineHeight: 16, color: '#6B7280' },
+  dateLabel: { fontSize: 14, fontWeight: '600', lineHeight: 20, color: '#111827' },
+
+  ctaButton: {
+    backgroundColor: '#193328',
+    borderRadius: 16,
+    padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 4,
+    minHeight: 88,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  ctaLeft: { flexDirection: 'row', alignItems: 'center', flex: 1, paddingRight: 12 },
+  ctaIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  ctaText: { marginLeft: 16, gap: 2, flex: 1 },
+  ctaTitle: { fontSize: 16, fontWeight: '800', lineHeight: 24, color: '#FFFFFF' },
+  ctaSubtitle: { fontSize: 12, lineHeight: 16, color: 'rgba(255,255,255,0.9)' },
+
+  placeholderCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#B7B09C',
+    padding: 16,
   },
+  placeholderTitle: { fontSize: 14, fontWeight: '800', color: '#111827', lineHeight: 20 },
+  placeholderBody: { marginTop: 6, fontSize: 12, lineHeight: 16, color: '#4B5563' },
 });
